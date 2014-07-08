@@ -1,0 +1,10 @@
+<h1>All Avaible task in your area<h1>
+
+<ul>
+{% for task in object_list %}
+    <li><a href="{{ task.get_absolute_url }}">{{ task.title }}</a></li>
+    <p>{{ task.discription }}</p>
+{% empty %}
+    <li>No task yet.</li>
+{% endfor %}
+</ul>

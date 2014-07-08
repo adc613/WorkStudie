@@ -1,0 +1,17 @@
+{% extends 'taskDetail.html' %}
+{% block user_actions %}
+	
+	{% if not accepted %}
+		<form method="GET" action="{% url 'task:accept_bid' task_pk=task.pk bid_pk=bid.pk %}">
+			{% csrf_token %}	
+			<button type="submit" class="btn btn-success">Accept Bid</button>
+		</form>
+	{% elif not completed %}
+		<form action="{% url 'task:create_review' task_pk=task_pk %}">
+			{% csrf_token %}
+			
+			<button type="submit" class="btn btn-success">Complete Task</button>
+		</form>
+	{% endif %}
+
+{% endblock %}

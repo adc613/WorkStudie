@@ -1,0 +1,33 @@
+<h1>{{ task.title }}</h1>
+<p>{{ task.discription }}</p>
+{% block worker_content %}{% endblock %}
+<p>
+	{% for bid in bids %}
+		{% if completed %}
+			<p> Task has already been completed <p>
+
+			{{bid.bid}}
+			</br>
+			{{bid.message}}
+			
+		
+		{% elif accepted %}
+			
+			<p> Task has been accepted, and the winning bid was
+				<p>{{ task.accepted_bid.bid }}</p>
+			</p>
+
+		{% else %}
+			bid: {{bid.bid}}
+			</br>
+			message: {{bid.message}}
+			
+		{% endif %}
+		{% block user_actions %}
+			{% endblock %}	
+			
+	{% endfor %}
+	{% block user_actions2 %}
+			{% endblock %}	
+	
+</p>

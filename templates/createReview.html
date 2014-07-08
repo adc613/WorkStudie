@@ -1,0 +1,6 @@
+<h1>Review</h1>
+<form method="POST" action="{% url 'task:create_review' task_pk=task_pk %}">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button type="submit"> submit</button>
+</form>
