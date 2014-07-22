@@ -8,10 +8,22 @@ https://docs.djangoproject.com/en/1.6/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
+
+import sys
+if 'test' in sys.argv or 'test_coverage' in sys.argv:
+    from .test_settings import DATABASES
+else:
+    from .normal_settings import DATABASES
+
+
 from django.core.urlresolvers import reverse
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+FIXTURE_DIRS = (
+   os.path.join(BASE_DIR, 'Test_Case_Fixtures'),
+)
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,8 +56,8 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    'south',
-    'debug_toolbar'
+    #'south',
+    'debug_toolbar',
 )
 
 LOCAL_APPS = (
@@ -72,26 +84,7 @@ WSGI_APPLICATION = 'workstudy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ['RDS_DB_NAME'],
-        'USER': os.environ['RDS_USERNAME'],
-        'PASSWORD': os.environ['RDS_PASSWORD'],
-        'HOST': os.environ['RDS_HOSTNAME'],
-        'PORT': os.environ['RDS_PORT'],
-    }
-}
 
-
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db.sqlite3'
-    }
-}
-"""
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -125,4 +118,12 @@ TEMPLATE_DIRS = (
 
 LOGIN_URL = '/account/login'
 
-#LOGIN_REDIRECT_URL = LOGIN_URL
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_HOST_USER = 'adc613@gmail.com'
+
+EMAIL_HOST_PASSWORD = 'Veyron254'
+ 
+EMAIL_PORT = 587
+
+EMAIL_USE_TLS = True

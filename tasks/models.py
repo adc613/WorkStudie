@@ -1,5 +1,8 @@
+import datetime
+
 from django.db import models
 from django.core.urlresolvers import reverse
+
 
 class IntegerRangeField(models.IntegerField):
     def __init__(self, verbose_name=None, name=None, min_value=None, max_value=None, **kwargs):
@@ -9,6 +12,19 @@ class IntegerRangeField(models.IntegerField):
         defaults = {'min_value': self.min_value, 'max_value':self.max_value}
         defaults.update(kwargs)
         return super(IntegerRangeField, self).formfield(**defaults)
+
+from south.modelsinspector import add_introspection_rules
+add_introspection_rules([
+        (
+            (IntegerRangeField, ),
+            [],
+            {
+                "verbose_name": ["verbose_name", {"default": None}],
+                "name":         ["name",         {"default": None}]
+            },
+        ),
+    ], ["^tasks\.models\.IntegerRangeField"])
+
 
 class Review(models.Model):
 	#the rating of the opposite party
@@ -27,11 +43,15 @@ class Bid(models.Model):
 	#A message meant for the creator about why there qualified or any specail conditions or anything really
 	message = models.TextField(max_length=140, blank=True)
 
+
 class Task(models.Model):
 	#Title of the task
 	title = models.CharField(blank=False, max_length=75)
 	#discription of the actual task
-	discription = models.TextField(blank=False,max_length=420) 
+	discription = models.TextField(blank=False, max_length=420) 
+	#the price that the studier is willing to pay, not necessairly maximum price
+	suggested_price = models.DecimalField(max_digits=5, decimal_places=2, blank=True)
+	
 	#Boolean field should be false until a worker accpets the task
 	accepted = models.BooleanField(default=False)
 	#Boolean fileds should reamin false until the task is completed and transation is done
@@ -41,6 +61,7 @@ class Task(models.Model):
 	#A foreign ket that represents only the worker who has accpeted the task
 	worker = models.ForeignKey('users.User', related_name='task_worker', null=True, blank=True)
 	#A field to represent all the bidders for the task
+	
 	bids = models.ManyToManyField(Bid, null=True, blank=True)
 	#A field to represent the selected bid for the task
 	accepted_bid = models.ForeignKey(Bid, related_name='accepted_bid', null=True, blank=True)
@@ -49,7 +70,14 @@ class Task(models.Model):
 	#review made by the creator about the worker
 	creator_review = models.ForeignKey(Review, related_name='task_create_review', null=True, blank=True)
 
-	
+	#date created
+	creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False, null=True)
+	#the date that the task was accepted
+	acception_date = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
+	#the date that the task was completed
+	completion_Date = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
+
+	#returns url of the detail view for the task	
 	def get_absolute_url(self):
 		return reverse('task:task', kwargs={'pk' : self.pk})
 
