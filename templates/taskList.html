@@ -1,10 +1,41 @@
-<h1>All Avaible task in your area<h1>
+<head>
+	{% load static %}
+	<title>WorkStudie</title>
+	
+	<link type="text/css" href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'styles/cover.css' %}" rel="stylesheet">
+
+    <link type="text/css" href="{% static 'css/task_list.css' %}" rel="stylesheet"/>
+</head>
+<body>
+
+
+<h1>All Avaible task in your area</h1>
 
 <ul>
-{% for task in object_list %}
-    <li><a href="{{ task.get_absolute_url }}">{{ task.title }}</a></li>
-    <p>{{ task.discription }}</p>
-{% empty %}
-    <li>No task yet.</li>
+
+	{% for task in object_list %}
+   		<div>
+   		 	<a href="{{ task.get_absolute_url }}"><h3>{{ task.title }}</h3>
+
+   		 	<p>{{ task.discription }}</p></a>
+   		</div>
+	{% empty %}
+    	<li>No task yet.</li>
 {% endfor %}
 </ul>
+
+
+<a href="{% url 'home' %}">
+	<div id="home_btn">
+		<p>Return Home</p>
+	</div>
+</a>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/docs.min.js"></script>
+</body>

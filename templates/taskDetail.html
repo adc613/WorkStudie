@@ -1,31 +1,56 @@
-<h1>{{ task.title }}</h1>
-<p>{{ task.discription }}</p>
-{% block worker_content %}{% endblock %}
-<p>
-	{% for bid in bids %}
-		{% if completed %}
-			<p> Task has already been completed <p>
+<head>
+	{% load static %}
+	<title>WorkStudie</title>
 
-			{{bid.bid}}
-			</br>
-			{{bid.message}}
+	<link type="text/css" href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{% static 'styles/cover.css' %}" rel="stylesheet">
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/taskDetail.css' %}">
+</head>
+
+<body>
+	<h1>{{ task.title }}</h1>
+	<div>
+		<p>{{ task.discription }}</p>
+		<p> Creator Suggested Price: ${{ task.suggested_price }}</p>
+		{% block worker_content %}{% endblock %}
+		</br>
+		{% block user_actions %}
+		{% endblock %}
+	</div>
+	<div>
+			{% if completed %}
+					<p><strong>Task has been completed</strong><p>
+
+					<p>
+						The winning bid was: {{bid.bid}}
+					</p>
 			
+			{% elif accepted %}
+							
+				<p>
+					<stong>
+						Task has been accepted, and the winning bid was
+					</stong>
+				</p>
+				<p>The winning bid was: {{ task.accepted_bid.bid }}</p>
+					
+
+			{% else %}
+				<p style="text-allign:center; margin-top: 3em;">
+					<strong>
+						Task has yet to be accepted
+					</strong>
+				</p>
+			{% endif %}
+	</div>
+
+<a href="{% url 'task:task_list' %}">
+	<div id="home_btn">
+		<p class="center" >Return to List</p>
+	</div>
+</a>
 		
-		{% elif accepted %}
-			
-			<p> Task has been accepted, and the winning bid was
-				<p>{{ task.accepted_bid.bid }}</p>
-			</p>
-
-		{% else %}
-			bid: {{bid.bid}}
-			</br>
-			message: {{bid.message}}
-			
-		{% endif %}
-			
-	{% endfor %}
-	{% block user_actions %}
-			{% endblock %}	
 	
-</p>
+</body>

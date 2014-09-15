@@ -7,6 +7,11 @@ from .forms import UserCreationForm, UserChangeForm
 
 
 class UserAdmin(UserAdmin):
+	"""
+	Stolen code from some django tutorial not really sure why I need such
+	a long user admin but I should probably do this for the other models
+	but that not too high on the to do list.
+	"""
 	form = UserChangeForm
 	add_form = UserCreationForm
 

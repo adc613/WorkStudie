@@ -56,13 +56,15 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    #'south',
+    'south',
     'debug_toolbar',
+    'braintree'
 )
 
 LOCAL_APPS = (
     'tasks',
-    'users'
+    'users',
+    'checkout'
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -83,7 +85,6 @@ WSGI_APPLICATION = 'workstudy.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -127,3 +128,17 @@ EMAIL_HOST_PASSWORD = 'Veyron254'
 EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
+
+BRAINTREE_MERCHANT_ID = "bhfgybf7d8vtqn55"
+
+BRAINTREE_PUBLIC_KEY = "ym2c9nswtdtkzbfs"
+
+BRAINTREE_PRIVATE_KET = "7391420db569e604b2fed4d5b742d891"
+
+import braintree
+braintree.Configuration.configure(braintree.Environment.Sandbox,
+                                  merchant_id=BRAINTREE_MERCHANT_ID,
+                                  public_key=BRAINTREE_PUBLIC_KEY,
+                                  private_key=BRAINTREE_PRIVATE_KET)
+
+

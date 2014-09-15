@@ -5,6 +5,9 @@ from django.core.urlresolvers import reverse
 
 
 class IntegerRangeField(models.IntegerField):
+	"""
+	A integer field that can only have a value between a given min and max
+	"""
     def __init__(self, verbose_name=None, name=None, min_value=None, max_value=None, **kwargs):
         self.min_value, self.max_value = min_value, max_value
         models.IntegerField.__init__(self, verbose_name, name, **kwargs)
@@ -27,15 +30,25 @@ add_introspection_rules([
 
 
 class Review(models.Model):
+	"""
+	A review for a worker or studier meant to be compeleted after every task.
+	"""
 	#the rating of the opposite party
 	rating = IntegerRangeField(min_value=1, max_value=10)
 	#Any extra cmments thhey may have
 	comments = models.TextField(max_length=1000, blank=True)
 	#the Creator the review
-	creator = models.ForeignKey('users.User', related_name="review_creator", null=True, blank=True)
+	creator = models.ForeignKey('users.User', related_name="review_creator",
+	 null=True, blank=True)
 
+	def __unicode__(self):
+		return self.creator
 
 class Bid(models.Model):
+	"""
+	Bid is used to bid on a task if for example the suggested price was set too 
+	high by the worker or there is no suggested price.
+	"""
 	#Bidding price
 	bid = models.DecimalField(max_digits=5, decimal_places=2)
 	#The bidder
@@ -43,8 +56,15 @@ class Bid(models.Model):
 	#A message meant for the creator about why there qualified or any specail conditions or anything really
 	message = models.TextField(max_length=140, blank=True)
 
+	def __unicode__(self):
+		return self.bidder
+
 
 class Task(models.Model):
+	"""
+	A task is the foundation of this site represents a task posted by a studier
+	that needs to be complted.
+	"""
 	#Title of the task
 	title = models.CharField(blank=False, max_length=75)
 	#discription of the actual task
@@ -80,6 +100,9 @@ class Task(models.Model):
 	#returns url of the detail view for the task	
 	def get_absolute_url(self):
 		return reverse('task:task', kwargs={'pk' : self.pk})
+
+	def __unicode__(self):
+		return self.title
 
 
 		

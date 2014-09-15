@@ -7,5 +7,9 @@ urlpatterns = patterns('',
     url(r'^logout/$', logout_view, name='logout'),
     url(r'^byebye/$', PostLogoutView.as_view(), name='post_logout'),
     url(r'^thanks/$', ThankYouView.as_view(), name='thanks'),
-    url(r'^signup/$', SignUpView.as_view(), name='signup')
+    url(r'^application/$', ApplicationView.as_view(), name='application'),
+    url(r'^IWannaWork/$', WorkerApplicationView.as_view(), name='worker_application'),
+    url(r'^IWannaStidoe/$', StudierApplicationView.as_view(), name='studier_application'),
+    url(r'^MyProfile/$', MyProfileView.as_view(), name='my_profile'),
+    url(r'^profile/$', ProfileView.as_view(), name='profile')
 )

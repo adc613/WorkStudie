@@ -2,19 +2,31 @@
 
 {% block user_actions %}
 	{% if bid %}
-	{% if not accepted %}
-		<form method="GET" action="{% url 'task:accept_bid' task_pk=task.pk bid_pk=bid.pk %}">
-			{% csrf_token %}	
-			<button type="submit" class="btn btn-success">Accept Bid</button>
-		</form>
-	{% elif not completed %}
-		<form action="{% url 'task:create_review' task_pk=task_pk %}">
-			{% csrf_token %}
+		{% load static %}
+		 <link type="text/css" href="{% static 'css/task_list.css' %}" rel="stylesheet"/>
+		
+		{% if not accepted %}
+			{% for bid in bids %}
+				<div>
+					<form method="GET" action="{% url 'task:accept_bid' task_pk=task.pk bid_pk=bid.pk %}">
+						{% csrf_token %}	
+						<button type="submit" class="btn btn-success">Accept Bid</button>
+					</form>
+				</div>
+			{% endfor %}
+		{% elif not completed %}
+			<div>
+				<form action="{% url 'task:create_review' task_pk=task_pk %}">
+				{% csrf_token %}
 			
-			<button type="submit" class="btn btn-success">Complete Task</button>
-		</form>
-	{% endif %}
+					<button type="submit" class="btn btn-success">Complete Task</button>
+				</form>
+			</div>
+		{% endif %}
+	
 	{% else%}
-	there are currently no bids
+	
+		<p class="center"><strong>There are currently no bids</strong></p>
+	
 	{% endif %}
 {% endblock %}

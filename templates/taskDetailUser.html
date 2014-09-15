@@ -2,13 +2,8 @@
 {% block user_content %}
 <p>
     	{% if user.is_authenticated %}
-    	<form method="POST" action="{% url 'task:bid' pk=task.pk %}">
-    		{% csrf_token %}
-    		{{ form.as_p }}
-
-        <input type="text" value=" {{ task.pk }}" id="pk" name="pk"> 
-    	<button type="submit"></button>
-    	</form>
+    	
+    	<h1>Give me a minute</h1>
     	{% endif %}
 
 </p>

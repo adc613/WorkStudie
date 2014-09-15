@@ -1,0 +1,10 @@
+{% extends 'application.html' %}
+{% block user_application %}
+	<form class="form-signin" role="form" action="{% url 'account:worker_application' %}" method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+      </form>
+{% endblock %}

@@ -20,6 +20,12 @@ from workstudy.settings.base import EMAIL_HOST_USER
 #view used when a studier accepts a given bid
 @login_required
 def accept_a_bid_view(request, **kwargs):
+	"""
+	Function is run in order to accept a bid. It the user is not the creator
+	of the task it should throw an error. Also will send creator an email
+	notifying them that their bid was accepted and they should promptly completely
+	the task.
+	"""
 	task=Task.objects.get(pk=kwargs['task_pk'])
 	
 	if task.creator == request.user and task.accepted_bid == None:
@@ -47,6 +53,11 @@ def accept_a_bid_view(request, **kwargs):
 #View run when a task is outright accepted with out a bid or anything just accepted as is (worker would accept a task then this view woul run)
 @login_required
 def accept_task_view(request, **kwargs):
+	"""
+	This function is run when a worker accepts a task just as the studier required and
+	at the studier's suggested price. The Studier should be notfied that their task was
+	accepted and a work will complete promptly.
+	"""
 	if request.user.is_worker:
 		task = Task.objects.get(pk=kwargs['pk'])
 		bid = Bid.objects.create(
@@ -76,7 +87,17 @@ def accept_task_view(request, **kwargs):
 
 #creates a bid in order to bid on a task
 class CreateBidView(View):
+	"""
+	View used for a worker creating a bid on a specfic task. 
+	"""
+
 	form = CreateBidForm
+	template_name ="createBid.html"
+
+	def get(self, request, **kwargs):
+		context = {'pk':kwargs['pk'], 'form':self.form}
+		return render(request, self.template_name, context)
+
 
 	def post(self, request, *args, **kwargs):
 		form = self.form(request.POST or None)
@@ -104,6 +125,12 @@ class CreateBidView(View):
 #View that is run when a task is completed
 @login_required
 def complete_task_view(request, **kwargs):
+	"""
+	Completes the task and eventually should redirect to the payment processing
+	Both the worker and the studier must complete the task it also redirects them 
+	to the review page where both worker and studier review each other.
+	"""
+
 	task=task.objects.get(pk=kwargs['task_pk'])
 	if task.accepted == True and task.accepted_bid != None:
 		
@@ -136,6 +163,10 @@ def complete_task_view(request, **kwargs):
 
 #This view is used when a task is completed and users are prompted to review each other
 class CreateReviewView(View):
+	"""
+	This view is used to create a new review on a worker or studier based on how well they
+	performed or how conciderate they were when doing the task.
+	"""
 	form = CreateReviewForm
 	template_name = 'createReview.html'
 
@@ -158,6 +189,9 @@ class CreateReviewView(View):
 
 #View used to create task
 class CreateTaskView(View):
+	"""
+	View used to create a task.
+	"""
 	form = CreateTaskForm
 	template_name = 'createTask.html'
 
@@ -165,9 +199,11 @@ class CreateTaskView(View):
 	def post(self, request, *args, **kwargs):
 		form = self.form(request.POST or None)
 		if form.is_valid():
+			user = request.user
 			save_it = form.save(commit=False)
-			save_it.creator = request.user
+			save_it.creator = user
 			save_it.save()
+			user.profile.tasks_made.add(save_it)
 			return HttpResponseRedirect('/account/thanks/')
 
 	@method_decorator(login_required)
@@ -176,8 +212,51 @@ class CreateTaskView(View):
 
 #detailed view of a task also where workers will bid on or accept tasks
 class TaskDetailView(DetailView):
+	"""
+	Shows the details of a task. And acts a base class for the other detail views
+	Other classes extended this in order to use a different template with varying
+	amount of information or options.
+	"""
 	model = Task
 	template_name = 'taskDetail.html'
+	form = CreateBidForm
+	
+	def get_context_data(self, **kwargs):
+		context = super(TaskDetailView, self).get_context_data(**kwargs)
+		context['now'] = timezone.now()
+		task = self.model.objects.get(pk=self.kwargs['pk'])
+		context['bids'] = task.bids.all()
+		context['accepted'] = task.accepted
+		context['completed'] = task.completed
+		context['bid'] = False if task.bids == None else False
+
+		return context
+
+class TaskDetailCreatorView(TaskDetailView):
+	"""
+	View shows the creator their detailed view of their task.
+	"""
+	template_name = "taskDetailCreator.html"
+
+class TaskDetailUserView(TaskDetailView):
+	"""
+	View Shows a random user their detialed view of a task.
+	"""
+	template_name = "taskDetailUser.html"
+
+class TaskDetailWorkerView(TaskDetailView):
+	"""
+	View shows the worker their detailed view of a task.
+	"""
+	template_name = "taskDetailWorker.html"
+
+class BidView(TaskDetailView):
+	"""
+	I think this is meant to show all the bids for a task, but I'm not entirely
+	sure...
+	"""
+	model = Task
+	template_name = 'taskBid.html'
 	form = CreateBidForm
 	
 	def get_context_data(self, **kwargs):
@@ -192,18 +271,12 @@ class TaskDetailView(DetailView):
 
 		return context
 
-class TaskDetailCreatorView(TaskDetailView):
-	template_name = "taskDetailCreator.html"
 
-class TaskDetailUserView(TaskDetailView):
-	template_name = "taskDetailUser.html"
-
-class TaskDetailWorkerView(TaskDetailView):
-	template_name = "taskDetailWorker.html"
-
-#redirects the user depending on the type of user they are this allows them to view the list of task in different ways
-#for the worker for example there allowed to post bids accept the task.
 def task_detail_view(request, **kwargs):
+	"""
+	Redirects the user to their proper view depending on what kind of user they
+	are.
+	"""
 	task = Task.objects.get(pk=kwargs['pk'])
 		
 	if request.user.is_authenticated():
@@ -218,6 +291,9 @@ def task_detail_view(request, **kwargs):
 
 #list all available task in the area
 class TaskListView(ListView):
+	"""
+	List all available task (all task that have yet to be accpeted by the studier)
+	"""
 	model = Task
 	form = CreateBidForm
 	template_name = 'taskList.html'
@@ -230,5 +306,8 @@ class TaskListView(ListView):
 		context['now'] = timezone.now()
 		context['form'] = self.form
 		return context
+
+
+
 
 

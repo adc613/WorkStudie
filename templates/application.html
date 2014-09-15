@@ -29,14 +29,13 @@
   <body>
 
     <div class="container">
-        <h2 class="form-signin-heading">Sign up to be a studier today</h2>
-      <form class="form-signin" role="form" action="{% url 'account:signup' %}" method="post">
-        {% csrf_token %}
-        
-        {{ form.as_p }}
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
-      </form>
+        <ul>
+          <li><a href="{% url 'account:studier_application' %}"<h2 class="form-signin-heading">Apply to be a studier today</h2></a></li>
+          <li><a href="{% url 'account:worker_application' %}"><h2>Apply to be a worker today</h2></a></li>
+        </ul>
+     
+      {% block user_application  %}
+      {% endblock %}
 
     </div> <!-- /container -->
 

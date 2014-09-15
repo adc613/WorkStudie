@@ -1,0 +1,32 @@
+<head>
+	<title>{{ user.first_name }} {{ user.last_name }}</title>
+</head>
+
+<body>
+	{% if user.is_worker %}
+		<div>
+			<h3>
+				Worker: {{ user.first_name }} {{ user.last_name }}
+			</h3>
+		</div>
+	{% else %}
+		<div>
+			<h3>
+				Studier: {{ user.first_name }} {{ user.last_name }}
+			</h3>
+		</div>
+	{% endif %}
+	<ul>
+		{% if user.is_worker %}
+			<li> Task Completed: {{ tasks_completed }} </li>
+		{% endif %}
+		<li>Majoring in: {{ profile.intended_college_major }}</li>
+		<li>Task Made: {{ tasks_made }}</li>
+	</ul>
+
+	<div>
+		<p>
+			{{ profile.skills_discription }}
+		</p>
+	</div>
+</body>

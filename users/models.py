@@ -3,15 +3,22 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 
 # Create your models here.class UserManager(BaseUserManager):
 class Profile(models.Model):
+	"""
+	Represents every users profile.
+	"""
 	#All the task that have been made by this user
 	tasks_made = models.ManyToManyField('tasks.Task', related_name='task_made')
 	#All the task that have been completed by the user
 	tasks_completed = models.ManyToManyField('tasks.Task', related_name='tasks_completed')
 	#Discription of what skills that have
-	skills_discription = models.TextField(max_length='1000', blank=True)
+	description = models.TextField(max_length='1000', blank=True)
+	#Intended Major
+	intended_major = models.CharField(max_length=255, blank=True, default="Life")
 
 class UserManager(BaseUserManager):	
-	
+	"""
+	Stolen code from online
+	"""
 
 	def create_user(self, email, first_name='John',last_name='Doe', password= None):
 		if not email:
@@ -37,14 +44,18 @@ class UserManager(BaseUserManager):
 		return user
 
 class User(AbstractBaseUser, PermissionsMixin):
+	"""
+	Represents every user just with different permissions
+	"""
 	#date that user join
 	creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False)
 	#link to user profile
-	profile = models.ForeignKey(Profile, null=True, blank=True, related_name='user_profile')
+	profile = models.ForeignKey(Profile, null=True, blank=True, related_name='user_profile') #bad code
 	email = models.EmailField(max_length=100, unique=True, primary_key=True)
 	first_name = models.CharField(max_length=255, blank=False)
 	last_name = models.CharField(max_length=100, blank=False)
 	is_active = models.BooleanField(default=False)
+	merchant_account_id = models.CharField(max_length=255, null=True)
 	
 	is_admin = models.BooleanField(default=False)
 	is_worker = models.BooleanField(default=False)

@@ -1,4 +1,20 @@
-<h1>Just a Test</h1>
-<form method="POST" action="{% url 'task:test' %}">
-	{% form.as_p %}
-</form>
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>Braintree Credit Card Transaction Form</h1>
+    <div>
+      <form action="{% url 'checkout:test' %}" method="POST" id="credit_card">
+        {% csrf_token %}       
+        
+        {{credit_card_form.as_p}}
+        
+        <input type="submit" id="submit" name="credit_card" />
+    </div>
+    <script src="https://js.braintreegateway.com/v1/braintree.js"></script>
+    <script>
+      var braintree = Braintree.create("MIIBCgKCAQEA0DYHI24w6bdFb+gSBdPtaJxjOPnxHc0GIjAkKR50HkXdn6tDaMMh+cQVFTQS/7m/JAB7K5Mx1FWaN17MoxbNGQCPMNxjTqtUjuVspOKvsRNlrDpxcZDVwS/f+URjqgFpKGzu8C4WdhkJLZiGh+3yu7kqKGSqLhbTlgGpJbKqdzfL6ZmXZUXvY6OqCb5Jf9hKZHrIFfbThWY2qAZFCkCSCTcqgtnY3fTR4KUhGw28a6aflIbP3Iegl0QS358lIHc1KpdKQc2LUorXjJ/mbmKx27hc0hDazKL3Bdk370sFhZiUGndmbJyCokR/UnBjo9Dc7i/5/BOdMaHLhF4Pl9BC1QIDAQAB");
+      braintree.onSubmitEncryptForm('braintree-payment-form');
+    </script>
+  </body>
+</html>

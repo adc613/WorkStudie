@@ -5,6 +5,9 @@ from .models import	User
 
 
 class UserCreationForm(forms.ModelForm):
+	"""
+	Stolen code from django tutorial
+	"""
 	password1 = forms.CharField(label='password',
 		widget = forms.PasswordInput)
 	password2 = forms.CharField(label='repeat password',
@@ -30,6 +33,9 @@ class UserCreationForm(forms.ModelForm):
 		return user
 
 class UserChangeForm(forms.ModelForm):
+	"""
+	Stolen code from django tutorial
+	"""
 	password = ReadOnlyPasswordHashField()
 
 	class Meta:

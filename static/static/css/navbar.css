@@ -1,0 +1,44 @@
+#square {
+	border-radius: 0px;
+	background-color: #464646;
+	border-color: #000000;
+	border-bottom-color: rgba(12, 5, 5, .74);
+	min-height: 50px;
+	max-height: 200px;
+	text-shadow: rgba(0, 0, 0, 1);
+	margin-bottom: 0px;
+}
+
+.color {
+	color: #FFF;
+}
+
+.button {
+	border-radius: 1px;
+
+}
+
+.forms {
+	border-radius: 1px;
+}
+
+.userButton {
+	padding-top: 1em;
+	border-radius: 1px;
+	background-color: #464646;
+}
+
+#createTask{
+	padding-top: .5em;
+	margin-top: .5em;
+	background-color: #5cb85c;
+	border-color: #4cae4c;
+}
+
+.hover:hover{
+	color: black;
+}
+
+li a:hover{
+	color: #5cb85c;
+}

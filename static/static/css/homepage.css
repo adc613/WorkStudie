@@ -1,0 +1,12 @@
+.homepage {
+	background-color: #5A5A5A;
+}
+
+.hover {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	color: black;
+}
