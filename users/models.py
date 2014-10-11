@@ -50,7 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	#date that user join
 	creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False)
 	#link to user profile
-	profile = models.ForeignKey(Profile, null=True, blank=True, related_name='user_profile') #bad code
+	profile = models.OneToOneField(Profile, null=True)
 	email = models.EmailField(max_length=100, unique=True, primary_key=True)
 	first_name = models.CharField(max_length=255, blank=False)
 	last_name = models.CharField(max_length=100, blank=False)
