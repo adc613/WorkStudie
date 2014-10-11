@@ -1,9 +1,6 @@
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test',
-        'USER': 'adamc',
-        'PASSWORD': ''
+	'default': {
+    	'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': 'db.sqlite3'
     }
 }
