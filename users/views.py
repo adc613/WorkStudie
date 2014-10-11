@@ -1,16 +1,19 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.core.mail import mail_admins
 from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.shortcuts import render, render_to_response, RequestContext, redirect
 from django.utils.datastructures import MultiValueDictKeyError 
 
-from .forms import UserCreationForm
+
+from .forms import UserCreationForm, ProfileCreationForm
 from .models import Profile
 
 def logout_view(request):
@@ -128,6 +131,30 @@ class ThankYouView(TemplateView):
 	"""
 	template_name = 'thankyou.html'
 
+class CreateProfileView(View):
+	"""
+	A view that allows the user to create his or her profile
+	"""
+	form = ProfileCreationForm
+	template_name = 'createProfile.html'
+
+	@method_decorator(login_required)
+	def get(self, request):
+		return render(request, self.template_name, {'form' : self.form})
+
+	@method_decorator(login_required)
+	def post(self, request, *args, **kwargs):
+		if request.user.profile:
+			return HttpResponseRedirect(reverse('home'))
+		form = self.form(request.POST or None)
+		if form.is_valid():
+			user = request.user
+			save_it = form.save(commit=False)
+			save_it.save()
+			user.profile = save_it
+			return HttpResponseRedirect(reverse('account:thanks'))
+
+
 class MyProfileView(View):
 	"""
 	Shows the user profile
@@ -136,9 +163,13 @@ class MyProfileView(View):
 
 	def get(self, request):
 		user = request.user
+		if not user.profile:
+			HttpResponseRedirect(reverse('account:create_profile'))
 		profile = user.profile
-		number_of_completed_task = profile.tasks_completed.count()
-		number_of_task_made = profile.tasks_made.count()
+		if profile.tasks_completed:
+			number_of_completed_task = profile.tasks_completed.count()
+		if profile.tasks_made:
+			number_of_task_made = profile.tasks_made.count()
 		print 'number of completed task: %r' % (number_of_completed_task)
 		context = {'user': user, 
 			'profile':profile,
