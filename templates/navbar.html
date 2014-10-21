@@ -22,6 +22,10 @@
       </ul>
       {% if user.is_authenticated %}
         
+         <form action="{% url 'account:create_profile' %}" class="navabar-form navbar-right">
+          <button type="submit" class="userButton btn btn=default" >Create Profile</button>
+         </form>
+         
          <form  action="{% url 'task:create_task' %}" class="navabar-form navbar-right">
           <button type="submit" id="createTask" class="userButton btn btn=default"  >Create a Task</button>
         </form>

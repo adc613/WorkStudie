@@ -14,6 +14,8 @@ class Profile(models.Model):
 	description = models.TextField(max_length='1000', blank=True)
 	#Intended Major
 	intended_major = models.CharField(max_length=255, blank=True, default="Life")
+	#The users profile
+	user = models.OneToOneField('users.User' ,blank=True, null=True)
 
 class UserManager(BaseUserManager):	
 	"""
@@ -49,8 +51,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 	"""
 	#date that user join
 	creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False)
-	#link to user profile
-	profile = models.OneToOneField(Profile, null=True)
 	email = models.EmailField(max_length=100, unique=True, primary_key=True)
 	first_name = models.CharField(max_length=255, blank=False)
 	last_name = models.CharField(max_length=100, blank=False)

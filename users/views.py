@@ -144,14 +144,14 @@ class CreateProfileView(View):
 
 	@method_decorator(login_required)
 	def post(self, request, *args, **kwargs):
-		if request.user.profile:
-			return HttpResponseRedirect(reverse('home'))
 		form = self.form(request.POST or None)
 		if form.is_valid():
 			user = request.user
 			save_it = form.save(commit=False)
-			save_it.save()
 			user.profile = save_it
+			save_it.save()
+			user.save()
+			messages.success(request, "You created your profile")
 			return HttpResponseRedirect(reverse('account:thanks'))
 
 
@@ -166,13 +166,14 @@ class MyProfileView(View):
 		if user.profile== None:
 			HttpResponseRedirect(reverse('account:create_profile'))
 		profile = user.profile
-		number_of_completed_task = profile.tasks_completed.count()
-		number_of_task_made = profile.tasks_made.count()
-		print 'number of completed task: %r' % (number_of_completed_task)
+		#number_of_completed_task = profile.tasks_completed.count()
+		#number_of_task_made = profile.tasks_made.count()
+		#print 'number of completed task: %r' % (number_of_completed_task)
 		context = {'user': user, 
 			'profile':profile,
-			'tasks_completed' : number_of_completed_task,
-			'tasks_made' : number_of_task_made
+			'major':profile.intended_major
+			#'tasks_completed' : number_of_completed_task,
+			#'tasks_made' : number_of_task_made
 			}
 		return render(request, self.template_name, context)
 
