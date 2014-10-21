@@ -14,7 +14,7 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 
 from .forms import UserCreationForm, ProfileCreationForm
-from .models import Profile
+from .models import Profile, User
 
 def logout_view(request):
 	"""
@@ -183,4 +183,18 @@ class ProfileView(DetailView):
 	"""
 	model = Profile
 	template_name = 'profile.html'
+
+	def get_context_data(self, **kwargs):
+		context = super(ProfileView, self).get_context_data(**kwargs)
+		profile = Profile.objects.get(pk = self.kwargs['pk'])
+		user = profile.user
+		number_of_completed_task = profile.tasks_completed.count()
+		number_of_task_made = profile.tasks_made.count()
+		context = {'user': user, 
+			'profile':profile,
+			'major':profile.intended_major,
+			'tasks_completed' : number_of_completed_task,
+			'tasks_made' : number_of_task_made
+			}
+		return context
 

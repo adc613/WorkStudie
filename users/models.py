@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.core.urlresolvers import reverse
 
 # Create your models here.class UserManager(BaseUserManager):
 class Profile(models.Model):
@@ -16,6 +17,13 @@ class Profile(models.Model):
 	intended_major = models.CharField(max_length=255, blank=True, default="Life")
 	#The users profile
 	user = models.OneToOneField('users.User' ,blank=True, null=True)
+
+	#Returns unicode and includes pk so I can easily look up the profile if need be
+	def __unicode__(self):
+		return str(self.pk) + ' ' + self.user.first_name + ' ' + self.user.last_name + "'s Profile"
+
+	def get_absolute_url(self):
+		return reverse('account:profile', {'pk':self.pk}) 
 
 class UserManager(BaseUserManager):	
 	"""
@@ -52,8 +60,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 	#date that user join
 	creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False)
 	email = models.EmailField(max_length=100, unique=True, primary_key=True)
-	first_name = models.CharField(max_length=255, blank=False)
-	last_name = models.CharField(max_length=100, blank=False)
+	first_name = models.CharField(max_length=255, default='John')
+	last_name = models.CharField(max_length=100, default='Doe')
 	is_active = models.BooleanField(default=False)
 	merchant_account_id = models.CharField(max_length=255, null=True)
 	

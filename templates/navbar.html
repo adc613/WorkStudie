@@ -12,36 +12,43 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
       <ul class="nav navbar-nav color">
+        
         {% if not user.is_authenticated %}
         <li><a style="color:white" href="{% url 'account:application' %}">Apply</a></li>
         {% else %}
-        <li><a style="color:white" href="{% url 'account:my_profile' %}">Profile</a></li>
+        
+          {% if user.profile %}
+            <li><a style="color:white" href="{% url 'account:my_profile' %}">My Profile</a></li>
+          {% endif %}
+        
         <li><a style="color:white" href="{% url 'task:task_list' %}">Tasks</a></li>
         {% endif %}
+      
       </ul>
+      
       {% if user.is_authenticated %}
         
-         <form action="{% url 'account:create_profile' %}" class="navabar-form navbar-right">
-          <button type="submit" class="userButton btn btn=default" >Create Profile</button>
-         </form>
+        {% if not user.profile %}
          
-         <form  action="{% url 'task:create_task' %}" class="navabar-form navbar-right">
+        <form action="{% url 'account:create_profile' %}" class="navabar-form navbar-right">
+          <button type="submit" class="userButton btn btn=default" >Create Profile</button>
+        </form>
+        
+        {% else %}
+        
+        <form  action="{% url 'task:create_task' %}" class="navabar-form navbar-right">
           <button type="submit" id="createTask" class="userButton btn btn=default"  >Create a Task</button>
         </form>
 
         <form action="{% url 'account:logout' %}" class="navabar-form navbar-right">
           <button type="submit" class="userButton btn btn=default" >Logout</button>
         </form>
-
-       
-
-       
         
-
+        {% endif %}
       
       {% else %}
-    
              
           <form method="POST" action="{% url 'account:login' %}" class="navbar-form navbar-left" role="form">
             {% csrf_token %}
@@ -56,11 +63,10 @@
             
             <button type="submit" class="button btn btn-success">Sign in</button>
       
-      
       {% endif %}
 
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+    </div>
+  </div>
 </nav>
 
 

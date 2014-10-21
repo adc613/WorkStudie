@@ -11,6 +11,6 @@ urlpatterns = patterns('',
     url(r'^IWannaWork/$', WorkerApplicationView.as_view(), name='worker_application'),
     url(r'^IWannaStidoe/$', StudierApplicationView.as_view(), name='studier_application'),
     url(r'^MyProfile/$', MyProfileView.as_view(), name='my_profile'),
-    url(r'^profile/$', ProfileView.as_view(), name='profile'),
-    url(r'^createprofile/4', CreateProfileView.as_view(), name='create_profile')
+    url(r'^profile/(?P<pk>\d+)/', ProfileView.as_view(), name='profile'),
+    url(r'^createprofile/$', CreateProfileView.as_view(), name='create_profile')
 )

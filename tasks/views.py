@@ -307,6 +307,20 @@ class TaskListView(ListView):
 		context['form'] = self.form
 		return context
 
+class TaskUserListView(ListView):
+	"""
+	List all task with respect to one user
+	"""
+	model = Task
+	template_name = 'taskList.html'
+
+	def get_queryset(self):
+		if self.kwargs['pk']:
+			pk = self.kwargs['pk']
+		else:
+			pk = request.user.profile.pk
+		profile = Profile.objects.get(pk = pk)
+		return profile.tasks_made			
 
 
 
