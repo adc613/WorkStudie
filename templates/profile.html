@@ -21,7 +21,7 @@
 			<li> Task Completed: {{ tasks_completed }} </li>
 		{% endif %}
 		<li>Majoring in: {{ major }}</li>
-		<li>Task Made: {{ tasks_made }}</li>
+		<a href="{% url 'task:user_tasks' %}"><li>Task Made: {{ tasks_made }}</li></a>
 	</ul>
 
 	<div>

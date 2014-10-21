@@ -15,6 +15,8 @@ urlpatterns = patterns('',
 	url(r'^bid/(?P<pk>\d+)/$', CreateBidView.as_view(), name='create_bid'),
 	url(r'^heysoulsister/(?P<task_pk>\d+)/(?P<bid_pk>\d+)/$', accept_a_bid_view, name='accept_bid'),
 	url(r'^accepttask/(?P<pk>\d+)/$', accept_task_view, name='accept_task' ),
+
+	url(r'^UsersTasks/$', UserTaskListView.as_view(), name='user_tasks'),
 	
 	url(r'^completetask/(?P<task_pk>\d+)/(?P<review_pk>\d+)/$', complete_task_view, name='complete_task'),
 	url(r'^createreview/(?P<task_pk>\d+)/$', CreateReviewView.as_view(), name='create_review'),

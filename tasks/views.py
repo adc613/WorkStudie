@@ -15,6 +15,7 @@ from django.views.generic import UpdateView
 
 from .forms import CreateTaskForm, CreateBidForm, CreateReviewForm
 from .models import Task, Bid, Review
+from users.models import Profile 
 from workstudy.settings.base import EMAIL_HOST_USER
 
 #view used when a studier accepts a given bid
@@ -307,7 +308,7 @@ class TaskListView(ListView):
 		context['form'] = self.form
 		return context
 
-class TaskUserListView(ListView):
+class UserTaskListView(ListView):
 	"""
 	List all task with respect to one user
 	"""
