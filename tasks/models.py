@@ -79,7 +79,7 @@ class Task(models.Model):
 	#Foreign Key represents the author of the tasks
 	creator = models.ForeignKey('users.User', related_name='task_creator')
 	#A foreign ket that represents only the worker who has accpeted the task
-	worker = models.ForeignKey('users.User', related_name='task_worker', null=True, blank=True)
+	worker = models.ForeignKey('users.User', limit_choices_to={'is_worker' : True}, related_name='task_worker', null=True, blank=True)
 	#A field to represent all the bidders for the task
 	
 	bids = models.ManyToManyField(Bid, null=True, blank=True)

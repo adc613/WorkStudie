@@ -316,12 +316,14 @@ class UserTaskListView(ListView):
 	template_name = 'taskList.html'
 
 	def get_queryset(self):
-		if self.kwargs['pk']:
+		try:
 			pk = self.kwargs['pk']
-		else:
-			pk = request.user.profile.pk
+		except KeyError:
+			pk = self.request.user.profile.pk
+			pass
 		profile = Profile.objects.get(pk = pk)
-		return profile.tasks_made			
+
+		return profile.tasks_made.all()			
 
 
 
