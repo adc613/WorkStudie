@@ -11,6 +11,7 @@
 
 <body>
 	<h1>{{ task.title }}</h1>
+	<a href="{{ task.creator.profile.get_absolute_url }}"><h3>Creator: {{task.creator.first_name}} {{task.creator.last_name}}</h3></a>
 	<div>
 		<p>{{ task.discription }}</p>
 		<p> Creator Suggested Price: ${{ task.suggested_price }}</p>

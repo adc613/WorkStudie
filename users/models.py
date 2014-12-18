@@ -23,7 +23,7 @@ class Profile(models.Model):
 		return str(self.pk) + ' ' + self.user.first_name + ' ' + self.user.last_name + "'s Profile"
 
 	def get_absolute_url(self):
-		return reverse('account:profile', {'pk':self.pk}) 
+		return reverse('account:profile', kwargs={'pk':self.pk}) 
 
 class UserManager(BaseUserManager):	
 	"""

@@ -2,23 +2,21 @@ from django.views.generic.base import TemplateView
 from django.shortcuts import render
 
 # Create your views here.
-def homepage_view(request):
+class ThankYouView(TemplateView):
 	"""
 	View of the home page
 	"""
-	template_name = 'homepage.html'
-	return render(request, template_name)
+	template_name = 'workstudy/homepage.html'
 
-def about_us_view(request):
+class ThankYouView(TemplateView):
 	"""
 	View of the about us page
 	"""
-	template_name = "about_us.html"
-	return render(request, template_name)
+	template_name = "workstudy/hbout_us.html"
 
 class ThankYouView(TemplateView):
 	"""
 	View of the thank your page thsi is the second thank you page views
 	i've seen could be violationg DRY
 	"""
-	template_name='thankyou.html'
+	template_name='workstudy/thankyou.html'

@@ -43,7 +43,7 @@ def accept_a_bid_view(request, **kwargs):
 					EMAIL_HOST_USER,
 					[task.creator.email],
 					fail_silently=False)
-		return HttpResponseRedirect(reverse('tasks:task_list'))
+		return HttpResponseRedirect(reverse('task:task_list'))
 	else:
 		messages.error(request, """It looks as if this task has already been accepted
 		 or maybe you're not the creator, but why would you being clicking 
@@ -93,7 +93,7 @@ class CreateBidView(View):
 	"""
 
 	form = CreateBidForm
-	template_name = "tasks/createBid.html"
+	template_name ="createBid.html"
 
 	def get(self, request, **kwargs):
 		context = {'pk':kwargs['pk'], 'form':self.form}
@@ -121,7 +121,7 @@ class CreateBidView(View):
 			return HttpResponseRedirect(reverse('home'))
 
 		else:
-			return HttpResponseRedirect(reverse('tasks:task_list'))
+			return HttpResponseRedirect(reverse('task:task_list'))
 
 #View that is run when a task is completed
 @login_required
@@ -143,7 +143,7 @@ def complete_task_view(request, **kwargs):
 			task.completed_date = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
 			task.save()
 
-			return HttpResponseRedirect(reverse('tasks:review', kwargs={'task_pk' : kwargs['task_pk']}))
+			return HttpResponseRedirect(reverse('task:review', kwargs={'task_pk' : kwargs['task_pk']}))
 		
 		elif task.worker == request.user:
 			
@@ -152,7 +152,7 @@ def complete_task_view(request, **kwargs):
 			task.completed_date = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
 			task.save()
 			task.worker.profile.task_completed.add(task)
-			return HttpResponseRedirect(reverse('tasks:review', kwargs={'task_pk' : kwargs['task_pk']}))
+			return HttpResponseRedirect(reverse('task:review', kwargs={'task_pk' : kwargs['task_pk']}))
 		
 		else:
 			
@@ -169,7 +169,7 @@ class CreateReviewView(View):
 	performed or how conciderate they were when doing the task.
 	"""
 	form = CreateReviewForm
-	template_name = 'tasks/createReview.html'
+	template_name = 'createReview.html'
 
 	@method_decorator(login_required)
 	def post(self, request, *args, **kwargs):
@@ -182,7 +182,7 @@ class CreateReviewView(View):
 			task.worker_review = save_it
 			task.completed = True
 			task.save()
-			return HttpResponseRedirect(reverse('tasks:task', pk=kwargs['task_pk']))
+			return HttpResponseRedirect(reverse('task:task', pk=kwargs['task_pk']))
 
 	@method_decorator(login_required)
 	def get(self, request, **kwargs):
@@ -194,7 +194,7 @@ class CreateTaskView(View):
 	View used to create a task.
 	"""
 	form = CreateTaskForm
-	template_name = 'tasks/createTask.html'
+	template_name = 'createTask.html'
 
 	@method_decorator(login_required)
 	def post(self, request, *args, **kwargs):
@@ -205,7 +205,7 @@ class CreateTaskView(View):
 			save_it.creator = user
 			save_it.save()
 			user.profile.tasks_made.add(save_it)
-			return HttpResponseRedirect(reverse('thanks'))
+			return HttpResponseRedirect('/account/thanks/')
 
 	@method_decorator(login_required)
 	def get(self, request):
@@ -219,7 +219,7 @@ class TaskDetailView(DetailView):
 	amount of information or options.
 	"""
 	model = Task
-	template_name = 'tasks/taskDetail.html'
+	template_name = 'taskDetail.html'
 	form = CreateBidForm
 	
 	def get_context_data(self, **kwargs):
@@ -237,19 +237,19 @@ class TaskDetailCreatorView(TaskDetailView):
 	"""
 	View shows the creator their detailed view of their task.
 	"""
-	template_name = "tasks/taskDetailCreator.html"
+	template_name = "taskDetailCreator.html"
 
 class TaskDetailUserView(TaskDetailView):
 	"""
 	View Shows a random user their detialed view of a task.
 	"""
-	template_name = "tasks/taskDetailUser.html"
+	template_name = "taskDetailUser.html"
 
 class TaskDetailWorkerView(TaskDetailView):
 	"""
 	View shows the worker their detailed view of a task.
 	"""
-	template_name = "tasks/taskDetailWorker.html"
+	template_name = "taskDetailWorker.html"
 
 class BidView(TaskDetailView):
 	"""
@@ -257,7 +257,7 @@ class BidView(TaskDetailView):
 	sure...
 	"""
 	model = Task
-	template_name = 'tasks/taskBid.html'
+	template_name = 'taskBid.html'
 	form = CreateBidForm
 	
 	def get_context_data(self, **kwargs):
@@ -282,13 +282,13 @@ def task_detail_view(request, **kwargs):
 		
 	if request.user.is_authenticated():
 		if request.user == task.creator:
-			return HttpResponseRedirect(reverse('tasks:task_detail_creator', kwargs={'pk':kwargs['pk']}))
+			return HttpResponseRedirect(reverse('task:task_detail_creator', kwargs={'pk':kwargs['pk']}))
 		elif request.user == task.worker:
-			return HttpResponseRedirect(reverse('tasks:task_detail_user', kwargs={'pk':kwargs['pk']})) #I need to change the user html document as is it doesn't make any sense
+			return HttpResponseRedirect(reverse('task:task_detail_user', kwargs={'pk':kwargs['pk']})) #I need to change the user html document as is it doesn't make any sense
 		elif request.user.is_worker == True:
-			return HttpResponseRedirect(reverse('tasks:task_detail_worker', kwargs={'pk':kwargs['pk']}))	
+			return HttpResponseRedirect(reverse('task:task_detail_worker', kwargs={'pk':kwargs['pk']}))	
 	
-	return HttpResponseRedirect(reverse('tasks:task_detail', kwargs={'pk':kwargs['pk']}))
+	return HttpResponseRedirect(reverse('task:task_detail', kwargs={'pk':kwargs['pk']}))
 
 #list all available task in the area
 class TaskListView(ListView):
@@ -297,7 +297,7 @@ class TaskListView(ListView):
 	"""
 	model = Task
 	form = CreateBidForm
-	template_name = 'tasks/taskList.html'
+	template_name = 'taskList.html'
 
 	def get_queryset(self):
 		return self.model.objects.filter(accepted=False)
@@ -313,7 +313,7 @@ class UserTaskListView(ListView):
 	List all task with respect to one user
 	"""
 	model = Task
-	template_name = 'tasks/taskList.html'
+	template_name = 'taskList.html'
 
 	def get_queryset(self):
 		#try:

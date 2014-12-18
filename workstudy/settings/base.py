@@ -57,8 +57,8 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     #'south',
-    'debug_toolbar',
-    'braintree'
+    #'debug_toolbar',
+    'braintree',
 )
 
 LOCAL_APPS = (
@@ -121,9 +121,9 @@ LOGIN_URL = '/account/login'
 
 EMAIL_HOST = 'smtp.gmail.com'
 
-EMAIL_HOST_USER = 'adc613@gmail.com'
+EMAIL_HOST_USER = 'workstudie@gmail.com'
 
-EMAIL_HOST_PASSWORD = 'Veyron254'
+EMAIL_HOST_PASSWORD = 'Case10is'
  
 EMAIL_PORT = 587
 
