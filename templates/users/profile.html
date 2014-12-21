@@ -1,27 +1,27 @@
 <head>
-	<title>{{ account.first_name }} {{ account.last_name }}</title>
+	<title>{{ users.first_name }} {{ users.last_name }}</title>
 </head>
 
 <body>
-	{% if account.is_worker %}
+	{% if users.is_worker %}
 		<div>
 			<h3>
-				Worker: {{ account.first_name }} {{ account.last_name }}
+				Worker: {{ users.first_name }} {{ users.last_name }}
 			</h3>
 		</div>
 	{% else %}
 		<div>
 			<h3>
-				Studier: {{ account.first_name }} {{ account.last_name }}
+				Studier: {{ users.first_name }} {{ users.last_name }}
 			</h3>
 		</div>
 	{% endif %}
 	<ul>
-		{% if account.is_worker %}
+		{% if users.is_worker %}
 			<li> Task Completed: {{ tasks_completed }} </li>
 		{% endif %}
 		<li>Majoring in: {{ major }}</li>
-		<a href="{% url 'task:user_tasks' pk=profile.pk %}"><li>Task Made: {{ tasks_made }}</li></a>
+		<a href="{% url 'tasks:user_tasks' pk=profile.pk %}"><li>Task Made: {{ tasks_made }}</li></a>
 	</ul>
 
 	<div>

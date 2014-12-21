@@ -1,4 +1,4 @@
-{% extends 'taskDetail.html' %}
+{% extends 'tasks/taskDetail.html' %}
 {% block user_actions %}
 	{% if accepted %}
 		<form method="POST" action="{% url 'task:create_review' task_pk=task.pk %}">

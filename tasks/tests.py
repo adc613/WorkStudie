@@ -1,6 +1,9 @@
+import datetime
+
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.test.client import Client
+from django.core.exceptions import ValidationError
 
 from .models import *
 from users.models import User
@@ -8,16 +11,83 @@ from users.models import User
 # Create your tests here.
 class TasksViewsTest(TestCase):
 
-	fixtures=['fixture02.json']
-	worker = User.objects.get(email='adc82@cim.edu')
-	studier = User.objects.get(email='adc95@comcast.net')
-	super_user = User.objects.get(email='adc82@case.edu')
-	task = Task.objects.get(pk=1)
-	bid = Bid.objects.get(pk=1)
-	def setUp(self):
-		# Every test needs a client.
-		self.client = Client()
+    def setUp(self):
+        User.objects.create_superuser(
+            email='life@me.co',
+            first_name='John',
+            last_name='Worker',
+            password='password',
+            )
+        
+        User.objects.create_superuser(
+            email='adc82@cim.edu',
+            first_name='John',
+            last_name='Studier',
+            password='password')
 
+        User.objects.create_superuser(
+            email='adc82@cia.edu',
+            first_name='John',
+            last_name='bidder',
+            password='password')
+        
+        User.objects.create_superuser(
+            email='adc82@cwru.edu',
+            first_name='John',
+            last_name='Doe',
+            password='password')
+
+        Task.objects.create(
+               title='love',
+               discription='life',
+               suggested_price=4.20,
+               creator=User.objects.get(pk='adc82@cim.edu'))
+
+        Bid.objects.create(
+               bid=3.33,
+               bidder=User.objects.get(pk='life@me.co'),
+               message="Am I just eating because I'm bord",
+               task=Task.objects.get(pk=1))
+
+        Bid.objects.create(
+               bid=3.00,
+               bidder=User.objects.get(pk='adc82@cwru.edu'),
+               message="Am I just eating because I'm bord",
+               task=Task.objects.get(pk=1))
+
+    def test_accept_bid_method(self):
+        task = Task.objects.get(pk=1)
+        bid = Bid.objects.get(pk=1)
+        bidder = User.objects.get(pk='life@me.co')
+        
+        self.assertNotEqual(task.worker,bidder)
+        self.assertNotEqual(task.accepted_bid, bid)
+        self.assertFalse(task.accepted)
+        
+        task.accept_bid(bid)
+
+        task = Task.objects.get(pk=1)
+        bid = Bid.objects.get(pk=1)
+        bidder = User.objects.get(pk='life@me.co')
+        
+        self.assertEqual(task.worker, bidder)
+        self.assertEqual(task.accepted_bid, bid)
+        self.assertTrue(task.accepted)
+
+        bad_bid = Bid.objects.get(pk=2)
+        passed = False
+        try:
+            self.assertRaises(task.accept_bid(bad_bid), ValidationError)
+        except ValidationError:
+            passed = True
+
+        self.assertTrue(passed)
+        
+    def test_complete_bid_method
+
+        
+
+"""
 	def test_accept_a_bid_view(self):
 		#Test to make sure you have to be login to access view
 		resp = self.client.get(reverse('task:accept_bid', 
@@ -110,4 +180,4 @@ class TasksViewsTest(TestCase):
 		self.client.login(email='adc95@comcast.net', password='ramrod')
 		self.client.login(email='adc82@case.edu', password='ramrod')
 
-
+"""

@@ -1,6 +1,6 @@
-{% extends 'application.html' %}
+{% extends 'users/application.html' %}
 {% block user_application %}
-	<form class="form-signin" role="form" action="{% url 'account:worker_application' %}" method="post">
+	<form class="form-signin" role="form" action="{% url 'users:worker_application' %}" method="post">
         {% csrf_token %}
         
         {{ form.as_p }}

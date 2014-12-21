@@ -6,8 +6,8 @@ from .views import *
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', homepage_view, name='home'),
-    url(r'^about/$', about_us_view, name='about_us'),
+    url(r'^$', HomepageView.as_view(), name='home'),
+    url(r'^about/$', AboutUsView.as_view(), name='about_us'),
     url(r'^thankyou/$', ThankYouView.as_view(), name='thanks'),
     
     url(r'^account/', include('users.urls', namespace='users')),

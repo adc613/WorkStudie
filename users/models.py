@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.core.urlresolvers import reverse
@@ -23,7 +25,7 @@ class Profile(models.Model):
 		return str(self.pk) + ' ' + self.user.first_name + ' ' + self.user.last_name + "'s Profile"
 
 	def get_absolute_url(self):
-		return reverse('account:profile', kwargs={'pk':self.pk}) 
+		return reverse('users:profile', kwargs={'pk':self.pk}) 
 
 class UserManager(BaseUserManager):	
 	"""
@@ -37,7 +39,7 @@ class UserManager(BaseUserManager):
 		user = self.model(
 			email=self.normalize_email(email),
 			first_name=first_name,
-			last_name=last_name
+			last_name=last_name,
 		)
 
 		user.set_password(password)

@@ -16,7 +16,7 @@ from django.views.generic import UpdateView
 from .forms import CreateTaskForm, CreateBidForm, CreateReviewForm
 from .models import Task, Bid, Review
 from users.models import Profile 
-from workstudy.settings.base import EMAIL_HOST_USER
+from workstudy.settings import EMAIL_HOST_USER
 
 #view used when a studier accepts a given bid
 @login_required

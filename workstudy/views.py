@@ -2,17 +2,17 @@ from django.views.generic.base import TemplateView
 from django.shortcuts import render
 
 # Create your views here.
-class ThankYouView(TemplateView):
+class HomepageView(TemplateView):
 	"""
 	View of the home page
 	"""
 	template_name = 'workstudy/homepage.html'
 
-class ThankYouView(TemplateView):
+class AboutUsView(TemplateView):
 	"""
 	View of the about us page
 	"""
-	template_name = "workstudy/hbout_us.html"
+	template_name = "workstudy/about_us.html"
 
 class ThankYouView(TemplateView):
 	"""

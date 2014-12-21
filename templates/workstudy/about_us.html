@@ -32,7 +32,6 @@
   <body>
    {% include 'navbar.html' %}
 
-  
     <!-- Carousel
     ================================================== -->
     <div id="myCarousel" class="horrible_class_name carousel slide" data-ride="carousel">
@@ -47,8 +46,6 @@
         </div>
     </div><!-- /.carousel -->
 
-
-
     <!-- Marketing messaging and featurettes
     ================================================== -->
     <!-- Wrap the rest of the page in another container to center all the content. -->
@@ -62,13 +59,11 @@
         <div class="col-md-10">
           <h2 class="featurette-heading">Studiers<span class="text-muted">, create the task.</span></h2>
           <p class="lead">A studier is someone who has a task that needs doing, but doesn't have the desire or motivation to do it. Examples would be cleaning, help tutoring, grocery shopping, laundry, help moving, or any task that they can think of. They set a price they are willing to pay and then workers bid to complete the task and the studier will choose their worker.</p>
-          <p><a class="button btn btn-lg btn-primary" href="{% url 'account:studier_application' %}" role="button">Apply to be a studier today</a></p>
+          <p><a class="button btn btn-lg btn-primary" href="{% url 'users:studier_application' %}" role="button">Apply to be a studier today</a></p>
         </div>
         <div class="col-md-2">
         </div>
       </div>
-
-
 
       <div class="row featurette">
         <div class="col-md-2">
@@ -76,11 +71,9 @@
         <div class="col-md-10">
           <h2 class="featurette-heading">Workers<span class="text-muted">, get paid to complete the tasks.</span></h2>
           <p class="lead">Workers are college students who are a little low on cash or just looking to make some more cash. Once They bid to complete a task they will complete the task in a timely manor.</p>
-          <p><a class="button btn btn-lg btn-primary" href="{% url 'account:worker_application' %}" role="button">Apply to be a worker</a></p>
+          <p><a class="button btn btn-lg btn-primary" href="{% url 'users:worker_application' %}" role="button">Apply to be a worker</a></p>
         </div>
       </div>
-
-
 
       <div class="row featurette">
         <div class="col-md-10">
@@ -92,9 +85,7 @@
         </div>
       </div>
 
-
       <!-- /END THE FEATURETTES -->
-
 
       <!-- FOOTER -->
 

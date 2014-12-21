@@ -1,4 +1,3 @@
-
 """
 Django settings for workstudy project.
 
@@ -9,21 +8,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
-import sys
-if 'test' in sys.argv or 'test_coverage' in sys.argv:
-    from .test_settings import DATABASES
-else:
-    from .normal_settings import DATABASES
-
-
 from django.core.urlresolvers import reverse
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-FIXTURE_DIRS = (
-   os.path.join(BASE_DIR, 'Test_Case_Fixtures'),
-)
-
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -45,20 +33,17 @@ ADMINS = (
 
 AUTH_USER_MODEL = 'users.User'
 # Application definition
+THIRD_PARTY_APPS = (
+        'debug_toolbar',
+        'braintree'
+)
 
 DJANGO_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-)
-
-THIRD_PARTY_APPS = (
-    #'south',
-    #'debug_toolbar',
-    'braintree',
+    'django.contrib.staticfiles'
 )
 
 LOCAL_APPS = (
@@ -86,6 +71,12 @@ WSGI_APPLICATION = 'workstudy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+DATABASES = {
+	'default': {
+    	'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': 'db.sqlite3'
+    }
+}
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
