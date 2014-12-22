@@ -1,8 +1,9 @@
 import datetime
 
-from django.db import models
-from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
+from django.db import models
+from django.utils import timezone
 
 class IntegerRangeField(models.IntegerField):
 	"""
@@ -85,9 +86,9 @@ class Task(models.Model):
 	#A field to represent the selected bid for the task
     accepted_bid = models.ForeignKey(Bid, related_name='accepted_bid', null=True, blank=True)
 	#Review given made by the worker about the creator
-    worker_review = models.ForeignKey(Review, related_name='task_worker_review', null=True, blank=True)
+    review_of_worker = models.ForeignKey(Review, related_name='task_worker_review', null=True, blank=True)
 	#review made by the creator about the worker
-    creator_review = models.ForeignKey(Review, related_name='task_create_review', null=True, blank=True)
+    review_of_creator = models.ForeignKey(Review, related_name='task_create_review', null=True, blank=True)
 
 	#date created
     creation_date = models.DateTimeField(auto_now_add=True, auto_now=False, editable=False, null=True)
@@ -96,8 +97,6 @@ class Task(models.Model):
 	#the date that the task was completed
     completion_Date = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
 
-    objects = TaskManager()
-
     def accept_bid(self,bid):
         if self.accepted_bid:
             raise ValidationError('a bid has already been accepted')
@@ -105,7 +104,7 @@ class Task(models.Model):
             self.accepted_bid = bid
             self.worker = bid.bidder
             self.accepted = True
-            self.accepted_date = datetime.datetime.utcnow()
+            self.accepted_date = datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
             self.save()
             return True
 

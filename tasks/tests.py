@@ -83,7 +83,23 @@ class TasksViewsTest(TestCase):
 
         self.assertTrue(passed)
         
-    def test_complete_bid_method
+    def test_create_review_view(self):
+        task = Task.objects.get(pk=1)
+        bid = Bid.objects.get(pk=1)
+        task.accept_bid(bid)
+
+        task = Task.objects.get(pk=1)
+        self.assertIsNone(task.review_of_creator)
+        c = Client()
+        c.login(email='life@me.co', password='password')
+        resp = c.post(reverse('tasks:create_review', kwargs={'task_pk':1}), 
+                {'rating':10, 'comments':'great personality'})
+        
+        self.assertEqual(resp.status_code, 302)
+        task = Task.objects.get(pk=1)
+        self.assertIsNotNone(task.review_of_creator)
+
+
 
         
 
