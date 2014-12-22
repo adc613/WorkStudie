@@ -68,20 +68,20 @@ def accept_task_view(request, **kwargs):
     if request.user.is_worker:
         task = Task.objects.get(pk=kwargs['pk'])
         bid = Bid.objects.create(
+            task=task,
             bidder=request.user,
             bid = task.suggested_price,
             message = "This task was accepted by a worker as is, with no conditions attached."
             )
-        bid.save()
         task.accept_bid(bid)
-        if task.creator.email_notifictions:
+        if task.creator.email_notifactions:
             send_mail('WorkStudie Notification',
                     "Someone accepted your task and it should be completely promptly. Head over to WorkStudie.com to check it out",
                     EMAIL_HOST_USER,
                     [task.creator.email],
                     fail_silently=False) #Eventually I should changethis to True it's a minor thing not getting a notifaction and it'd be even more annoying to get an error message when the user is using the website
             messages.success(request,"You have taken on this task, please completely in a timely fasion.")
-            return HttpResponseRedirect(reverse('home')) #Eventually this should be some sort of success page
+        return HttpResponseRedirect(reverse('home')) #Eventually this should be some sort of success page
     
     else:
         messages.error(request, "You are not worker therefore you're not allowed to accept the task")
@@ -181,8 +181,8 @@ class CreateReviewView(View):
     def post(self, request, *args, **kwargs):
         task = Task.objects.get(pk=kwargs['task_pk'])
         if request.user != task.worker and request.user != task.creator:
-            message.error("You are not the worker or creator of this task")
-            return HttpResponseRedirect(reverse(home))
+            messages.error(request,"You are not the worker or creator of this task")
+            return HttpResponseRedirect(reverse('home'))
         form = self.form(request.POST or None)
         if form.is_valid():
             save_it = form.save(commit=False)

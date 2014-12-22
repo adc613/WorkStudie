@@ -69,7 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	
 	is_admin = models.BooleanField(default=False)
 	is_worker = models.BooleanField(default=False)
-	email_notifictions = models.BooleanField(default=True)
+	email_notifactions = models.BooleanField(default=True)
 	is_superuser = False
 	
 	objects = UserManager()
