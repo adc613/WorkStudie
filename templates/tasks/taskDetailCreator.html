@@ -8,7 +8,7 @@
 		{% if not accepted %}
 			{% for bid in bids %}
 				<div>
-					<form method="GET" action="{% url 'task:accept_bid' task_pk=task.pk bid_pk=bid.pk %}">
+					<form method="GET" action="{% url 'tasks:accept_bid' task_pk=task.pk bid_pk=bid.pk %}">
 						{% csrf_token %}	
 						<button type="submit" class="btn btn-success">Accept Bid</button>
 					</form>
@@ -16,7 +16,7 @@
 			{% endfor %}
 		{% elif not completed %}
 			<div>
-				<form action="{% url 'task:create_review' task_pk=task_pk %}">
+				<form action="{% url 'tasks:create_review' task_pk=task_pk %}">
 				{% csrf_token %}
 			
 					<button type="submit" class="btn btn-success">Complete Task</button>

@@ -154,6 +154,9 @@ class TasksViewsTest(TestCase):
         self.assertEqual(task.worker, self.worker)
         self.assertEqual(task.accepted_bid, self.bid)
 
+        c = Client()
+        self.user.is_worker = False
+        self.user.save()
 
     def test_accept_task_view(self):
         task = Task.objects.get(pk=self.task.pk)
@@ -167,55 +170,113 @@ class TasksViewsTest(TestCase):
         self.assertEqual(resp.status_code, 302)
         self.assertIsNotNone(task.accepted_bid)
 
-"""
+
     def test_create_bid_view(self):
-        pass
+        c = Client()
+        self.user.is_worker = False
+        self.user.save()
+        c.login(email=self.user.email, password='password')
+        resp = c.get(reverse('tasks:create_bid', kwargs={'pk':self.task.pk}))
+        #Test to make sure PermissionDenied is raised for a user that isn't
+        #a worker
+        self.assertEqual(resp.status_code, 403)
+        
+        c.login(email=self.worker.email, password='password')
+        resp = c.get(reverse('tasks:create_bid', kwargs={'pk':self.task.pk}))
+        #Test to make sure PermissionDenied is not raised
+        self.assertEqual(resp.status_code, 200)
+       
+        c.login(email=self.user.email, password='password')
+        resp = c.post(reverse('tasks:create_bid', kwargs={'pk':self.task.pk}),
+                {'bid':2.00, 'message':'I love cake'})
+        
+
+        self.assertEqual(resp.status_code, 403)
+        c.login(email=self.worker.email, password='password')
+        resp = c.post(reverse('tasks:create_bid', kwargs={'pk':self.task.pk}),
+                {'bid':2.00, 'message':'I love cake'})
+        
+        self.assertEqual(resp.status_code, 302)
+        bid = Bid.objects.get(bid=2.00)
+        self.assertIsNotNone(bid)
 
     def test_complete_task_view(self):
         pass
-
+    
     def test_create_review_view(self):
-        pass
+        task = Task.objects.get(pk=self.task.pk)
+        task.accept_bid(self.bid)
+        
+        c = Client()
+        c.login(email=self.user.email, password='password')
+        resp = c.post(reverse('tasks:create_review', kwargs={'task_pk':self.task.pk}),
+                {'comments':'Thaks for the help','rating':9})
+        #Test to make sure permission denied is raised
+        self.assertEqual(resp.status_code, 403)       
+
+        #Test to make sure review of creator is porperly created
+        task = Task.objects.get(pk=self.task.pk)
+        self.assertIsNone(task.review_of_creator)
+        c.login(email=self.worker.email, password='password')
+        resp = c.post(reverse('tasks:create_review', kwargs={'task_pk':self.task.pk}),
+                {'comments':'Thaks for the help','rating':9})
+        task = Task.objects.get(pk=self.task.pk)
+        self.assertIsNotNone(task.review_of_creator)
+        self.assertEqual(resp.status_code, 302)
+        
+        #Test to make sure review of worker is properly created
+        self.assertIsNone(task.review_of_worker)
+        c.login(email=self.studier.email, password='password')
+        resp = c.post(reverse('tasks:create_review', kwargs={'task_pk':self.task.pk}),
+                {'comments':'Thaks for the help','rating':9})
+        task = Task.objects.get(pk=self.task.pk)
+        self.assertIsNotNone(task.review_of_worker)
+        self.assertEqual(resp.status_code, 302)
 
     def test_create_task_view(self):
-        self.client.login(email='adc95@comcast.net', password='ramrod')
-        resp = self.client.get(reverse('task:create_task'))
-        self.assertEqual(resp.status_code, 302)
-        self.assertTemplateUsed('createTask.html')
-        self.client.logout()
-        resp = self.client.get(reverse('task:create_task'))
+        c = Client()
+        resp = c.get(reverse('tasks:create_task'))
         self.assertEqual(resp.status_code, 302)
 
+        c.login(email=self.studier, password='password')
+        resp = c.get(reverse('tasks:create_task'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed('tasks/createTask.html')
+
+        resp = c.post(reverse('tasks:create_task'),
+                {'title':'someone play tennis with me',
+                 'discription': 'anyone......',
+                 'suggested_price': .01})
+
+        task = Task.objects.get(title='someone play tennis with me')
+        self.assertIsNotNone(task)
 
 
     def test_test_detail_view(self):
-        self.client.logout()
-        resp = self.client.get(reverse('task:task', 
+        c = Client()
+        self.user.is_worker = False
+        self.user.save()
+        c = Client() 
+        resp = c.get(reverse('tasks:task', 
             kwargs={'pk':1}), follow=True)
         self.assertTrue(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'taskDetail.html')
+        self.assertTemplateUsed(resp, 'tasks/taskDetail.html')
         
-        self.client.login(email='adc82@case.edu', password='ramrod')
-        resp = self.client.get(reverse('task:task', 
+        c.login(email=self.worker, password='password')
+        resp = c.get(reverse('tasks:task', 
             kwargs={'pk':1}), follow=True)
         self.assertTrue(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'taskDetailWorker.html')
+        self.assertTemplateUsed(resp, 'tasks/taskDetailWorker.html')
         self.client.logout()
         
-        self.client.login(email='adc95@comcast.net', password='ramrod')
-        resp = self.client.get(reverse('task:task', 
+        c.login(email=self.studier.email, password='password')
+        resp = c.get(reverse('tasks:task', 
             kwargs={'pk':1}), follow=True)
         self.assertTrue(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'taskDetailCreator.html')
-        self.client.logout()
+        self.assertTemplateUsed(resp, 'tasks/taskDetailCreator.html')
 
     def test_task_list_view(self):
-        resp = self.client.get(reverse('task:task_list'))
+        c = Client()
+        resp = c.get(reverse('tasks:task_list'))
         self.assertTrue(resp.status_code, 200)
-        self.assertTemplateUsed(resp, 'taskList.html')
-        self.client.login(email='adc82@cim.edu', password='ramrod')
-        resp = self.client.get(reverse('task:task_list'))
-        self.client.login(email='adc95@comcast.net', password='ramrod')
-        self.client.login(email='adc82@case.edu', password='ramrod')
-
-"""
+        self.assertTemplateUsed(resp, 'tasks/taskList.html')

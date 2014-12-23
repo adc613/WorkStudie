@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -96,35 +97,46 @@ class CreateBidView(View):
     form = CreateBidForm
     template_name = "tasks/createBid.html"
 
+    @method_decorator(login_required)
     def get(self, request, **kwargs):
-        context = {'pk':kwargs['pk'], 'form':self.form}
-        return render(request, self.template_name, context)
-
-
-    def post(self, request, *args, **kwargs):
-        form = self.form(request.POST or None)
-        if form.is_valid():
-            save_it = form.save(commit=False)
-            save_it.bidder = request.user
-            save_it.save()
-
-            task = Task.objects.get(pk=kwargs['pk'])
-            bid = Bid.objects.get(pk=save_it.pk)
-            task.bids.add(bid)
-
-            if task.creator.email_notifactions:
-                send_mail('WorkStudie Notification',
-                    "Someone bidded on your task. Head over to WorkStudie.com to check it out",
-                    EMAIL_HOST_USER,
-                    [task.creator.email],
-                    fail_silently=False)
-
-            return HttpResponseRedirect(reverse('home'))
-
+        if request.user.is_worker:
+            context = {'pk':kwargs['pk'], 'form':self.form}
+            return render(request, self.template_name, context)
         else:
-            return HttpResponseRedirect(reverse('tasks:task_list'))
+            raise PermissionDenied("Only wokers can bid on task")
 
-#View that is run when a task is completed
+
+    @method_decorator(login_required)
+    def post(self, request, *args, **kwargs):
+        if request.user.is_worker:
+            form = self.form(request.POST or None)
+            if form.is_valid():
+                task = Task.objects.get(pk=kwargs['pk'])
+                save_it = form.save(commit=False)
+                save_it.bidder = request.user
+                save_it.task = task
+                save_it.save()
+
+                if task.creator.email_notifactions:
+                    send_mail('WorkStudie Notification',
+                        "Someone bidded on your task. Head over to WorkStudie.com to check it out",
+                        EMAIL_HOST_USER,
+                        [task.creator.email],
+                        fail_silently=False)
+
+                return HttpResponseRedirect(reverse('home'))
+            else:
+                messages.error(request,
+                        """
+                        Form was in valid please try again. If porblem continues
+                        please contact workstudie@gmail.com.
+                        """)
+                return HttpResponseRedirect(reverse('tasks:create_bid',
+                    kwargs={'pk':kwargs['pk']}))
+        else:
+            raise PermissionDenied("Only workers can bid on task")
+
+#View that is run when a task is completed need to redirect to checkout
 @login_required
 def complete_task_view(request, **kwargs):
     """
@@ -178,11 +190,14 @@ class CreateReviewView(View):
     template_name = 'tasks/createReview.html'
 
     @method_decorator(login_required)
+    def get(self, request, **kwargs):
+        return render(request,self.template_name, {'form': self.form, 'task_pk' : kwargs['task_pk']})
+
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         task = Task.objects.get(pk=kwargs['task_pk'])
         if request.user != task.worker and request.user != task.creator:
-            messages.error(request,"You are not the worker or creator of this task")
-            return HttpResponseRedirect(reverse('home'))
+            raise PermissionDenied("You are not allowed to review this task")
         form = self.form(request.POST or None)
         if form.is_valid():
             save_it = form.save(commit=False)
@@ -195,7 +210,7 @@ class CreateReviewView(View):
             else :
                 task.review_of_worker = save_it
                 task.save()
-        return HttpResponseRedirect(reverse('tasks:task', kwargs={'pk':kwargs['task_pk']}))
+            return HttpResponseRedirect(reverse('tasks:task', kwargs={'pk':kwargs['task_pk']}))
         messages.error(request,
                 """
                 There's been a mistaek with your review, please try again, if
@@ -204,9 +219,6 @@ class CreateReviewView(View):
                 )
         return HttpResponseRedirect(reverse('tasks:task', kwargs={'pk':kwargs['task_pk']}))
 
-    @method_decorator(login_required)
-    def get(self, request, **kwargs):
-        return render(request,self.template_name, {'form': self.form, 'task_pk' : kwargs['task_pk']})
     
 
 #View used to create task
@@ -225,7 +237,6 @@ class CreateTaskView(View):
             save_it = form.save(commit=False)
             save_it.creator = user
             save_it.save()
-            user.profile.tasks_made.add(save_it)
             return HttpResponseRedirect(reverse('thanks'))
 
     @method_decorator(login_required)

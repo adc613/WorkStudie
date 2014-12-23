@@ -1,7 +1,7 @@
 {% extends 'tasks/taskDetail.html' %}
 {% block user_actions %}
 	{% if accepted %}
-		<form method="POST" action="{% url 'task:create_review' task_pk=task.pk %}">
+		<form method="POST" action="{% url 'tasks:create_review' task_pk=task.pk %}">
 			{% csrf_token %}	
 			<button type="submit" class="btn btn-success">Complete Task</button>
 		</form>
@@ -9,13 +9,13 @@
 
 		
 
-		<form method="POST" action="{% url 'task:accept_task' pk=task.pk %}">
+		<form method="POST" action="{% url 'tasks:accept_task' pk=task.pk %}">
 			{% csrf_token %}
 			<button type="submit" class="btn btn-success">ACCEPT TASK AS IS</button>
 		</form>
 
 
-		<a href="{% url 'task:create_bid' task.pk %}"><button type="submit" class="btn btn-success">Bid</button></a>
+		<a href="{% url 'tasks:create_bid' task.pk %}"><button type="submit" class="btn btn-success">Bid</button></a>
 	{% endif %}
 {% endblock %}
 

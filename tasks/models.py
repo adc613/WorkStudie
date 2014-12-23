@@ -56,7 +56,7 @@ class Bid(models.Model):
 	#A message meant for the creator about why there qualified or any specail conditions or anything really
     message = models.TextField(max_length=140, blank=True)
     #The task being bidded on
-    task = models.ForeignKey('tasks.Task', related_name='bid') 
+    task = models.ForeignKey('tasks.Task', related_name='bids') 
 
     def __unicode__(self):
         return self.bidder

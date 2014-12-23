@@ -76,10 +76,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	USERNAME_FIELD = 'email'
 
-	def make_worker(self):
-		self.is_worker = True
-		return self
-
 	def get_full_name(self):
 		return self.first_name +' ' + self.last_name
 
