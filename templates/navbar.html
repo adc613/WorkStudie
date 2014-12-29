@@ -1,13 +1,14 @@
 <head>
-{% load static %}
-<link type="text/css" href="{% static 'css/navbar.css' %}" rel="stylesheet">
+    {% load static %}
+    <link type="text/css" href="{% static 'css/navbar.css' %}" rel="stylesheet">
+    
 </head>
 
 <nav id ="square" class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <a class="navbar-brand" style="color:white" href="{% url 'home' %}">WorkStudie</a>
+      <a class="brand hover" href="{% url 'home' %}">WorkStudie</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -16,14 +17,14 @@
       <ul class="nav navbar-nav color">
         
         {% if not user.is_authenticated %}
-        <li><a style="color:white" href="{% url 'users:application' %}">Apply</a></li>
+        <a class="brand item" href="{% url 'users:application' %}">Apply</a><
         {% else %}
         
           {% if user.profile %}
-            <li><a style="color:white" href="{% url 'users:my_profile' %}">My Profile</a></li>
+            <li><a class="brand item" href="{% url 'users:my_profile' %}">My Profile</a></li>
           {% endif %}
         
-        <li><a style="color:white" href="{% url 'tasks:task_list' %}">Tasks</a></li>
+        <li><a class="brand item" href="{% url 'tasks:task_list' %}">Tasks</a></li>
         {% endif %}
       
       </ul>
@@ -33,19 +34,19 @@
         {% if not user.profile %}
          
         <form action="{% url 'users:create_profile' %}" class="navabar-form navbar-right">
-          <button type="submit" class="userButton btn btn=default" >Create Profile</button>
+          <button type="submit" class="userButton btn btn=default button" >Create Profile</button>
         </form>
         
         {% else %}
+       
+        <form action="{% url 'users:logout' %}" class="navabar-form navbar-right">
+          <button type="submit" class="button btn btn=default" >Logout</button>
+        </form>
         
         <form  action="{% url 'tasks:create_task' %}" class="navabar-form navbar-right">
-          <button type="submit" id="createTask" class="userButton btn btn=default"  >Create a Task</button>
+          <button type="submit" id="createTask" class="button btn btn=default"  >Create a Task</button>
         </form>
 
-        <form action="{% url 'users:logout' %}" class="navabar-form navbar-right">
-          <button type="submit" class="userButton btn btn=default" >Logout</button>
-        </form>
-        
         {% endif %}
       
       {% else %}

@@ -1,0 +1,77 @@
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+	<style type="text/css">
+		.red {
+			background-color: red
+		}
+
+		.blue {
+			background-color: blue
+		}
+
+		.green {
+			background-color: green
+		}
+	</style>
+</head>
+<body>
+
+	<div class='red'>
+		red
+	</div>
+	<div class='green'>
+		green
+	</div>
+	<div class='blue'>
+		blue
+	</div>
+	<form action="{% url 'checkout:p' %}" id="payment-form" method="post">
+		{% csrf_token %}
+		number:	<input class="card-number" type='text'/>
+		cvc:	<input class="card-cvc" type='text'/>
+		month:	<input class="card-expiry-month" type='text'/>
+		year:	<input class="card-expiry-year" type='text'/>
+		<div class='payment-errors'>
+		</div>
+		<button id='token'>token</button>
+	</form>
+	
+	<script type="text/javascript">
+		$('#token').click(function(){
+			$form = $('#payment-form')
+			$form.append($("<input name='life' type=text/>").val('life'));
+			$form.append('<h6>' + $('.card-number').val() + '</h6>');
+			$form.append('<h6>' + $('.card-cvc').val() + '</h6>');
+			$form.append('<h6>' + $('.card-expiry-month').val() + '</h6>');
+			$form.append('<h6>' + $('.card-expiry-year').val() + '</h6>');
+			Stripe.setPublishableKey('pk_test_pqCDMXXAdmmV0HA01s0w03VS');
+
+			Stripe.card.createToken({
+  					number: $('.card-number').val(),
+  					cvc: $('.card-cvc').val(),
+	  				exp_month: $('.card-expiry-month').val(),
+  					exp_year: $('.card-expiry-year').val()
+					}, stripeResponseHandler);
+			
+			function stripeResponseHandler(status, response) {
+
+			if (response.error) {
+				    // Show the errors on the form
+				    $form.find('.payment-errors').text(response.error.message);
+				    $form.find('button').prop('disabled', false);
+				    $form.append($('<input type="text" name="stripeToken" />').val('42'));
+				    console.log('failed');
+				  } else {
+				    // response contains id and card, which contains additional card details
+				    var token = response.id;
+				    console.log(token);
+				    // Insert the token into the form so it gets submitted to the server
+			    	$form.append($('<input type="text" name="stripeToken" />').val(token));
+				    // and submit
+				    $form.get(0).submit();
+				  }
+				};
+		})
+	</script>
+</body>

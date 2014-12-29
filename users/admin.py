@@ -16,7 +16,7 @@ class UserAdmin(UserAdmin):
 	add_form = UserCreationForm
 
 	list_display = ('email', 'first_name','last_name',
-		'is_active', 'is_superuser', 'is_worker', 'email_notifictions', 'profile')
+		'is_active', 'is_superuser', 'is_worker', 'email_notifactions', 'profile')
 	list_filter = ('is_superuser','is_admin', 'is_worker')
 
 	fieldsets = (

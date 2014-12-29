@@ -1,6 +1,42 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
+    <head>
+        {% load static %}
+        <title>WorkStudie</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" media="(max-width: 640px)" href="static/css/mobile_homepage.css">
+    </head>
+    <nav>
+        <ul>
+            <li><a>WorkStudie</a></li>
+            <li><a>Tasks</a></li>
+            <li><a>Profile</a></li>
+            <div>
+                <li><a>Sign in</a></li>
+            </div>
+        </ul>
+    </nav>
+    <body>
+        <div>
+            <h1>WorkStudie</h1>
+            <p>
+                Welcome to WorkStudie an online virtual bulletin board for
+                college campuses. Allowing college students to connect in a 
+                way never before possible. Pay people to help out with task such
+                as laundry, cleaning, grocery shopping, or tutoring, and a
+                certified worker will help you out. Don't worry all workers will
+                be a student at your school.
+            </p>
+            <a>Learn More</a>
+        </div>
+    </body>
+
+    <footer>
+        <a>Email us with question, comments, or concerns at WorkStudie@gmail.com</a>
+    </footer>
+</html>
+
+<!---{# <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,12 +48,12 @@
     <title>WorkStudie</title>
     {% load static %}
     <!-- Bootstrap core CSS -->
-    <link type="text/css" href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!--<link type="text/css" href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
    
 
     <!-- Custom styles for this template -->
-    <link href="{% static 'styles/cover.css' %}" rel="stylesheet">
+    <!--<link href="{% static 'styles/cover.css' %}" rel="stylesheet">
     <link type="text/css" href="{% static 'css/homepage.css' %}" rel="stylesheet">
     
 
@@ -29,7 +65,7 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
+  <!--</head>
 
   <body class="text">
     {% include 'navbar.html' %}
@@ -61,8 +97,9 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="../../dist/js/bootstrap.min.js"></script>
     <script src="../../assets/js/docs.min.js"></script>
   </body>
 </html>
+#}

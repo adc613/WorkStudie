@@ -1,0 +1,49 @@
+from django.core.urlresolvers import reverse
+from django.test import TestCase
+from django.test.client import Client
+
+from tasks.models import Task, Bid
+from users.models import User
+
+# Create your tests here.
+class CheckoutTest(TestCase):
+    
+    def setUp(self):
+        self.worker = User.objects.create_superuser(
+                email = 'worker@case.edu',
+                first_name = 'John',
+                last_name = 'Worker',
+                password = 'password')
+
+        self.studier = User.objects.create(
+                email = 'studier@case.edu',
+                first_name = 'John',
+                last_name = 'Studier',
+                password = 'password',
+                is_active = True)
+        
+        self.task = Task.objects.create(
+                title = 'Life',
+                discription = 'love it',
+                creator = self.studier,
+                suggested_price=4.20)
+
+        self.bid = Bid.objects.create(
+                bid = 4.19,
+                message = 'Perfect price',
+                bidder = self.worker,
+                task = self.task)
+
+        self.task.accept_bid(self.bid)
+
+    def test_checkout_view(self):
+        self.assertEqual(self.studier.email, 'studier@case.edu')
+        c = Client()
+        c.login(email=self.studier.email, password='password')
+        resp = c.post(reverse('checkout:checkout', kwargs={'pk':self.task.pk}),
+                {'card_number': '4111111111111111',
+                 'cvv': '111',
+                 'expiration_month': '05',
+                 'expiration_year' : '20',
+                 })
+        self.assertNotEqual(resp.status_code,403)

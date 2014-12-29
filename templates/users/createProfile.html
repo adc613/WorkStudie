@@ -1,5 +1,5 @@
 <h1>Create a Profile!</h1>
-<form method="POST" action="{% url 'account:create_profile' %}">
+<form method="POST" action="{% url 'users:create_profile' %}">
 	{% csrf_token %}
 	{{ form.as_p }}
 	<button type="submit">Submit</button>

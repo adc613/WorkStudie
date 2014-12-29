@@ -4,7 +4,7 @@ class CreditCardInfo(forms.Form):
 	"""
 	Form for puting in credit card info 
 	"""
-	card_number = forms.IntegerField(max_value=9999999999999999, min_value=99999999999999)
+	card_number = forms.CharField(max_length=17)
 	cvv = forms.IntegerField(max_value=999, min_value=99)
 	expiration_month = forms.IntegerField(max_value=13, min_value=0)
 	expiration_year = forms.IntegerField(max_value=2030, min_value=2013)

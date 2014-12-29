@@ -15,8 +15,21 @@
 
 .button {
 	border-radius: 1px;
-
+    border-color: #428bca;
+    background-color: #428bca;
+    margin-right: 1em;
+    margin-top: .5em;
+    padding-top: .5em;
+    color: white;
 }
+
+.button:hover {
+    background-color: #2A5B86;
+    border-color: #2A5B86;
+    color: white;
+}
+    
+
 
 .forms {
 	border-radius: 1px;
@@ -27,18 +40,34 @@
 	border-radius: 1px;
 	background-color: #464646;
 }
-
+/*
 #createTask{
 	padding-top: .5em;
 	margin-top: .5em;
-	background-color: #5cb85c;
 	border-color: #4cae4c;
 }
-
-.hover:hover{
-	color: black;
+*/
+.brand {
+    color:white;
+    float: left;
+    padding: 15px;
+    font-size: 18px;
+    line-height: 20px;
+    height: 50px;
+   
 }
 
-li a:hover{
-	color: #5cb85c;
+.item {
+padding-top: 15px;
+padding-bottom: 15px;
+    line-height: 20px;
+    position: relative;
+display: block;
+padding: 10px 15px;
+
+}
+
+.brand:hover{
+	color: #428bca;
+    text-decoration: none;
 }

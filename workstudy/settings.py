@@ -35,7 +35,6 @@ AUTH_USER_MODEL = 'users.User'
 # Application definition
 THIRD_PARTY_APPS = (
         'debug_toolbar',
-        'braintree'
 )
 
 DJANGO_APPS = (
@@ -119,17 +118,17 @@ EMAIL_HOST_PASSWORD = 'Case10is'
 EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
+"""
+BRAINTREE_MERCHANT_ID = "6pky6k4wn8zv8qv5"
 
-BRAINTREE_MERCHANT_ID = "bhfgybf7d8vtqn55"
+BRAINTREE_PUBLIC_KEY = "wjnjmcvgks67jqwj"
 
-BRAINTREE_PUBLIC_KEY = "ym2c9nswtdtkzbfs"
-
-BRAINTREE_PRIVATE_KET = "7391420db569e604b2fed4d5b742d891"
+BRAINTREE_PRIVATE_KEY = "0644195d268ff95465a555bf2647655b"
 
 import braintree
 braintree.Configuration.configure(braintree.Environment.Sandbox,
-                                  merchant_id=BRAINTREE_MERCHANT_ID,
-                                  public_key=BRAINTREE_PUBLIC_KEY,
-                                  private_key=BRAINTREE_PRIVATE_KET)
-
+                                  BRAINTREE_MERCHANT_ID,
+                                  BRAINTREE_PUBLIC_KEY,
+                                  BRAINTREE_PRIVATE_KEY)
+"""
 
